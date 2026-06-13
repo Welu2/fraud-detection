@@ -156,71 +156,141 @@ data/processed/
 ├── fraud_test.csv
 └── creditcard_processed.csv
 ```
+## Task 2: Model Building and Training
 
-### Dataset Descriptions
+### Objective
 
-| File                     | Description                             |
-| ------------------------ | --------------------------------------- |
-| fraud_merged.csv         | Feature-engineered dataset used for EDA |
-| fraud_processed.csv      | Encoded and scaled fraud dataset        |
-| fraud_train_smote.csv    | Training dataset after SMOTE            |
-| fraud_test.csv           | Holdout test dataset                    |
-| creditcard_processed.csv | Cleaned and scaled credit card dataset  |
+Build, train, evaluate, and compare machine learning models for fraud detection on highly imbalanced datasets.
 
 ---
 
-## How to Run
+### Train-Test Strategy
 
-### Create Virtual Environment
+A stratified train-test split was used to preserve the original fraud class distribution.
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+For the Fraud_Data dataset:
 
-### Install Dependencies
+* Training set was balanced using SMOTE
+* Test set remained untouched to avoid information leakage
 
-```bash
-pip install -r requirements.txt
-```
+---
 
-### Run Preprocessing Pipeline
+### Models Evaluated
 
-```bash
-python3 -m scripts.run_preprocessing
-```
+#### Logistic Regression
 
-### Launch Notebooks
+Used as the baseline model because:
 
-```bash
-jupyter notebook
+* Highly interpretable
+* Fast training time
+* Strong baseline for binary classification
+
+#### Random Forest
+
+Used as the ensemble model because:
+
+* Handles nonlinear relationships
+* Robust to noisy features
+* Effective for fraud detection problems
+
+Hyperparameter tuning was performed using GridSearchCV.
+
+Parameters explored included:
+
+* n_estimators
+* max_depth
+* min_samples_split
+
+---
+
+### Evaluation Metrics
+
+Because fraud detection is a highly imbalanced classification problem, accuracy was not used as the primary metric.
+
+Models were evaluated using:
+
+* Precision
+* Recall
+* F1 Score
+* ROC-AUC
+* Area Under Precision-Recall Curve (AUC-PR)
+* Confusion Matrix
+
+AUC-PR was treated as the primary evaluation metric because it better reflects performance on rare fraud cases.
+
+---
+
+### Cross Validation
+
+Stratified 5-Fold Cross Validation was used to obtain reliable performance estimates.
+
+Reported statistics include:
+
+* Mean F1 Score
+* Standard Deviation of F1 Score
+* Mean AUC-PR
+* Standard Deviation of AUC-PR
+
+---
+
+### Model Comparison
+
+The following models were compared:
+
+| Model               | Precision                 | Recall                    | F1                        | ROC-AUC                   | AUC-PR                    |
+| ------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- |
+| Logistic Regression | Generated during training | Generated during training | Generated during training | Generated during training | Generated during training |
+| Random Forest       | Generated during training | Generated during training | Generated during training | Generated during training | Generated during training |
+
+Complete results are stored in:
+
+```text
+models/model_comparison.csv
 ```
 
 ---
 
-## Technologies Used
+### Model Selection
 
-* Python
-* Pandas
-* NumPy
-* Matplotlib
-* Seaborn
-* Scikit-learn
-* Imbalanced-learn (SMOTE)
-* Jupyter Notebook
+Logistic Regression served as the interpretable baseline model.
+
+Random Forest achieved stronger fraud detection performance across evaluation metrics and cross-validation folds.
+
+Since fraud detection prioritizes detection of minority fraud cases, AUC-PR was used as the primary model selection criterion.
+
+The best-performing model was saved as:
+
+```text
+models/best_model.pkl
+```
 
 ---
 
-## Status
+## Generated Model Artifacts
 
-✅ Task 1 Completed
+```text
+models/
 
-Completed deliverables:
+├── logistic_regression.pkl
+├── random_forest.pkl
+├── best_model.pkl
+└── model_comparison.csv
+```
 
-* Data cleaning
-* Exploratory data analysis
-* Geolocation integration
-* Feature engineering
-* Data transformation
-* Class imbalance handling with SMOTE
-* Processed datasets ready for machine learning modeling
+---
+
+## Running Model Training
+
+To retrain models from scratch:
+
+```bash
+python scripts/train_models.py
+```
+
+Alternatively, open:
+
+```text
+notebooks/modeling.ipynb
+```
+
+and execute all cells.
