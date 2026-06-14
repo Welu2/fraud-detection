@@ -294,3 +294,238 @@ notebooks/modeling.ipynb
 ```
 
 and execute all cells.
+## Task 3: Model Explainability and Business Insights
+
+### Objective
+
+The objective of Task 3 was to interpret the selected fraud detection model using SHAP (SHapley Additive exPlanations) and translate model behavior into actionable business recommendations.
+
+Explainability is critical in fraud detection because financial institutions must understand why transactions are flagged as suspicious. Transparent models help fraud analysts investigate cases more effectively and support trust in automated decision-making systems.
+
+---
+
+### Explainability Approach
+
+The best-performing model from Task 2, Random Forest, was selected for explainability analysis.
+
+The following techniques were used:
+
+#### Built-in Feature Importance
+
+Random Forest feature importance scores were extracted to identify the most influential predictors.
+
+A visualization of the top 10 features was generated.
+
+Output:
+
+```text
+models/top10_feature_importance.png
+```
+
+---
+
+#### SHAP Analysis
+
+SHAP was used to understand both global model behavior and individual predictions.
+
+Generated visualizations:
+
+```text
+models/shap_summary.png
+models/shap_bar.png
+models/force_tp.html
+models/force_fp.html
+models/force_fn.html
+```
+
+These plots provide insight into:
+
+* Global feature importance
+* Direction of feature impact
+* Individual transaction-level explanations
+
+---
+
+### Top Fraud Drivers
+
+The Random Forest feature importance analysis identified the following top fraud indicators:
+
+| Feature                  | Importance |
+| ------------------------ | ---------- |
+| device_transaction_count | 0.405      |
+| time_since_signup        | 0.205      |
+| ip_address               | 0.042      |
+| age                      | 0.041      |
+| purchase_value           | 0.038      |
+
+Key findings:
+
+* Device behavior was the strongest fraud signal.
+* Fraudulent transactions often occurred shortly after account creation.
+* Transaction characteristics such as purchase amount and IP-related features contributed significantly to model decisions.
+
+---
+
+### SHAP Interpretation
+
+#### Global Feature Importance
+
+The SHAP summary plot confirmed that the model primarily relies on:
+
+* Device transaction frequency
+* Time since signup
+* Purchase value
+* IP-related features
+* Transaction timing information
+
+The SHAP rankings closely aligned with Random Forest feature importance, increasing confidence in the model's decision-making process.
+
+---
+
+#### True Positive Analysis
+
+A correctly identified fraud case was analyzed using a SHAP force plot.
+
+Key observations:
+
+* High device transaction activity strongly pushed the prediction toward fraud.
+* Short account age increased fraud probability.
+* Multiple fraud indicators contributed simultaneously to the final prediction.
+
+---
+
+#### False Positive Analysis
+
+A legitimate transaction incorrectly flagged as fraud was examined.
+
+Key observations:
+
+* The transaction displayed several fraud-like characteristics.
+* Device and timing features contributed heavily to the fraud prediction.
+* This suggests opportunities to reduce customer friction through threshold optimization.
+
+---
+
+#### False Negative Analysis
+
+A missed fraud case was analyzed.
+
+Key observations:
+
+* The transaction resembled legitimate customer behavior.
+* Fraud indicators were weaker than in correctly detected fraud cases.
+* Additional behavioral features may improve recall.
+
+---
+
+### Comparison of Feature Importance Methods
+
+Both Random Forest feature importance and SHAP identified similar high-impact predictors.
+
+Advantages of SHAP:
+
+* Explains individual predictions.
+* Indicates whether a feature increases or decreases fraud risk.
+* Provides greater transparency than traditional feature importance alone.
+
+This makes SHAP particularly valuable for fraud investigation and regulatory reporting.
+
+---
+
+### Business Recommendations
+
+Based on feature importance and SHAP analysis, the following recommendations are proposed.
+
+#### 1. Additional Verification for New Accounts
+
+Evidence:
+
+* time_since_signup was the second most influential feature.
+
+Recommendation:
+
+Require additional authentication for purchases occurring shortly after account creation.
+
+Expected Impact:
+
+Reduce account creation fraud and synthetic identity attacks.
+
+---
+
+#### 2. Device-Based Fraud Monitoring
+
+Evidence:
+
+* device_transaction_count was the most important fraud indicator.
+
+Recommendation:
+
+Flag devices associated with unusually high transaction volumes or multiple accounts.
+
+Expected Impact:
+
+Improve detection of coordinated fraud activity.
+
+---
+
+#### 3. Risk-Based Review for High-Value Transactions
+
+Evidence:
+
+* purchase_value consistently contributed to fraud predictions.
+
+Recommendation:
+
+Apply additional fraud screening for large purchases.
+
+Expected Impact:
+
+Reduce financial losses from high-risk transactions.
+
+---
+
+#### 4. Time-Based Monitoring Rules
+
+Evidence:
+
+* hour_of_day and day_of_week influenced model decisions.
+
+Recommendation:
+
+Implement enhanced monitoring during high-risk transaction periods.
+
+Expected Impact:
+
+Improve fraud detection efficiency and analyst resource allocation.
+
+---
+
+### Explainability Artifacts
+
+Generated explainability outputs:
+
+```text
+models/
+
+├── top10_feature_importance.png
+├── shap_summary.png
+├── shap_bar.png
+├── force_tp.html
+├── force_fp.html
+└── force_fn.html
+```
+
+---
+
+### Conclusion
+
+Random Forest was selected as the final fraud detection model because it significantly outperformed Logistic Regression across all evaluation metrics.
+
+SHAP analysis demonstrated that fraud predictions are primarily driven by:
+
+* Device transaction activity
+* Account age
+* Transaction value
+* IP-related signals
+
+The explainability analysis provided actionable business insights that can be used to strengthen fraud prevention strategies while minimizing unnecessary customer disruption.
